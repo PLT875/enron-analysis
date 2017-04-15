@@ -1,0 +1,8 @@
+/target
+.worksheet
+.classpath
+.settings
+project/project
+project/target
+/bin/
+.history
