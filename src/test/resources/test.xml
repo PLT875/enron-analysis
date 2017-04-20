@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root MajorVersion="1" MinorVersion="0" CaseId="badeer-r_702_BP3A" Description="CaseUtil">
+   <Batch name=" Batch 1">
+      <Documents>
+         <Document DocID="3.306612.MMTU4BCQMZZEKKZ4ZQE1LLITYNXGFOAKA" DocType="Message" MimeType="message/rfc822">
+            <Tags>
+               <Tag TagName="#From" TagDataType="Text" TagValue="Leonard  Alice &amp;lt;ALeonard@caiso.com&amp;gt;" />
+               <Tag TagName="#To" TagDataType="Text" TagValue="someone@example.com" />
+               <Tag TagName="#Subject" TagDataType="Text" TagValue="CAISO Notification: Joint 2002-2004 RMR Study &amp; Integrated Annual Expansion    Plan Study Stakeholder Meeting" />
+               <Tag TagName="#DateSent" TagDataType="DateTime" TagValue="2000-05-30T17:34:00.0+00:00" />
+               <Tag TagName="#HasAttachments" TagDataType="Boolean" TagValue="true" />
+               <Tag TagName="#AttachmentCount" TagDataType="Integer" TagValue="1" />
+               <Tag TagName="#AttachmentNames" TagDataType="Text" TagValue="Joint RMR and Expansion Plan Study agenda jun12.pdf" />
+               <Tag TagName="X-SDOC" TagDataType="Text" TagValue="1450900" />
+               <Tag TagName="X-ZLID" TagDataType="Text" TagValue="zl-edrm-enron-v2-badeer-r-800.eml" />
+            </Tags>
+            <Files>
+               <File FileType="Native">
+                  <ExternalFile FilePath="native_000" FileName="3.306612.MMTU4BCQMZZEKKZ4ZQE1LLITYNXGFOAKA.eml" FileSize="14293" Hash="62100A32040153EEFD74EF3F068A6D5E" />
+               </File>
+               <File FileType="Text">
+                  <ExternalFile FilePath="text_000" FileName="text1.txt" FileSize="3481" Hash="1565707CB268D024B9967B2A0CF5CCD5" />
+               </File>
+            </Files>
+            <Locations>
+               <Location>
+                  <Custodian>Robert D Badeer&amp;lt;robert.d.badeer@enron.com&amp;gt;</Custodian>
+                  <LocationURI>badeer-r\Discussion threads</LocationURI>
+               </Location>
+            </Locations>
+         </Document>
+         <Document DocID="3.306694.NTL0X0CUKUCUEF0RZ10KPMX3TX5WD0MPA" DocType="Message" MimeType="message/rfc822">
+            <Tags>
+               <Tag TagName="#From" TagDataType="Text" TagValue="Leonard  Alice &amp;lt;ALeonard@caiso.com&amp;gt;" />
+               <Tag TagName="#To" TagDataType="Text" TagValue="someone1@example.com, someone2@example.com" />
+               <Tag TagName="#CC" TagDataType="Text" TagValue="someone3@example.com" />
+               <Tag TagName="#Subject" TagDataType="Text" TagValue="CAISO Notification: Joint 2002-2004 RMR Study &amp; Integrated Annual Expansion    Plan Study Stakeholder Meeting" />
+               <Tag TagName="#DateSent" TagDataType="DateTime" TagValue="2000-05-30T17:34:00.0+00:00" />
+               <Tag TagName="#HasAttachments" TagDataType="Boolean" TagValue="true" />
+               <Tag TagName="#AttachmentCount" TagDataType="Integer" TagValue="1" />
+               <Tag TagName="#AttachmentNames" TagDataType="Text" TagValue="Joint RMR and Expansion Plan Study agenda jun12.pdf" />
+               <Tag TagName="X-SDOC" TagDataType="Text" TagValue="1450795" />
+               <Tag TagName="X-ZLID" TagDataType="Text" TagValue="zl-edrm-enron-v2-badeer-r-695.eml" />
+            </Tags>
+            <Files>
+               <File FileType="Native">
+                  <ExternalFile FilePath="native_000" FileName="3.306694.NTL0X0CUKUCUEF0RZ10KPMX3TX5WD0MPA.eml" FileSize="14281" Hash="70FEE1CB5F9609BFBC22CEB4270C40C2" />
+               </File>
+               <File FileType="Text">
+                  <ExternalFile FilePath="text_000" FileName="text2.txt" FileSize="3481" Hash="1B1326E0575F4A233A9E627C92731415" />
+               </File>
+            </Files>
+            <Locations>
+               <Location>
+                  <Custodian>Robert D Badeer&amp;lt;robert.d.badeer@enron.com&amp;gt;</Custodian>
+                  <LocationURI>badeer-r\California</LocationURI>
+               </Location>
+            </Locations>
+         </Document>
+         <Document DocID="3.306695.CC0O1YZI3V2FQGLE0BQ0O1IGHTAZWXE3B" DocType="Message" MimeType="message/rfc822">
+            <Tags>
+               <Tag TagName="#From" TagDataType="Text" TagValue="Leonard  Alice &amp;lt;ALeonard@caiso.com&amp;gt;" />
+               <Tag TagName="#To" TagDataType="Text" TagValue="Market Participants &amp;lt;IMCEAEX-_O=CAISO_OU=CORPORATE_CN=DISTRIBUTION+20LISTS_CN=MARKETPARTICIPANTS@caiso.com&amp;gt;" />
+               <Tag TagName="#CC" TagDataType="Text" TagValue="someone3@example.com" />
+               <Tag TagName="#Subject" TagDataType="Text" TagValue="CAISO Notification: Commencement of 2000 Operational Study in Jul y 2000" />
+               <Tag TagName="#DateSent" TagDataType="DateTime" TagValue="2000-06-01T16:15:00.0+00:00" />
+               <Tag TagName="#HasAttachments" TagDataType="Boolean" TagValue="false" />
+               <Tag TagName="X-SDOC" TagDataType="Text" TagValue="1450794" />
+               <Tag TagName="X-ZLID" TagDataType="Text" TagValue="zl-edrm-enron-v2-badeer-r-694.eml" />
+            </Tags>
+            <Files>
+               <File FileType="Native">
+                  <ExternalFile FilePath="native_000" FileName="3.306695.CC0O1YZI3V2FQGLE0BQ0O1IGHTAZWXE3B.eml" FileSize="2565" Hash="07BCBD39C415B2333890E64162690D0C" />
+               </File>
+               <File FileType="Text">
+                  <ExternalFile FilePath="text_000" FileName="text3.txt" FileSize="2341" Hash="9D8FD26A3EC1E0AF909961E1438E75C2" />
+               </File>
+            </Files>
+            <Locations>
+               <Location>
+                  <Custodian>Robert D Badeer&amp;lt;robert.d.badeer@enron.com&amp;gt;</Custodian>
+                  <LocationURI>badeer-r\California</LocationURI>
+               </Location>
+            </Locations>
+         </Document>
+         <Document DocID="3.306588.AU5DS3XMEAZESPWCBBZ4KQ2ZXYPJUHX0A.1" DocType="File" MimeType="application/msexcell">
+				<Tags>
+					<Tag TagName="#FileName" TagDataType="Text" TagValue="CALILT Fax.xls"/>
+					<Tag TagName="#FileExtension" TagDataType="Text" TagValue="xls"/>
+					<Tag TagName="#FileSize" TagDataType="LongInteger" TagValue="288256"/>
+					<Tag TagName="#DateCreated" TagDataType="DateTime" TagValue="2000-07-24T10:06:00.0+00:00"/>
+					<Tag TagName="#DateModified" TagDataType="DateTime" TagValue="2000-07-24T10:06:00.0+00:00"/>
+				</Tags>
+				<Files>
+					<File FileType="Native">
+						<ExternalFile FileSize="288256" Hash="251B793339555A0B809FE0F82D785B69" FileName="3.306588.AU5DS3XMEAZESPWCBBZ4KQ2ZXYPJUHX0A.1.xls" FilePath="native_000"/>
+					</File>
+					<File FileType="Text">
+						<ExternalFile FilePath="text_000" FileName="3.306588.AU5DS3XMEAZESPWCBBZ4KQ2ZXYPJUHX0A.1.txt" FileSize="1850" Hash="8E6C57C0425A6384BBF477C7B2D6286E"/>
+					</File>
+				</Files>
+		</Document>
+      </Documents>
+   </Batch>
+</Root>
