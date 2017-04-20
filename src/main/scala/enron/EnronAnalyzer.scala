@@ -1,16 +1,55 @@
 package enron
 
-import parser._
-
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
-import org.apache.spark.SparkContext._
-
+import org.apache.spark.{ SparkConf, SparkContext }
 import org.apache.spark.rdd.RDD
-import java.io.File;
+import java.util.zip._
+import scala.util.matching.Regex
+
+import java.io.{ File, BufferedReader, InputStreamReader }
 
 object EnronAnalyzer {
 
+  // defining Spark to run in local mode
+  val conf: SparkConf = new SparkConf().setMaster("local").setAppName("enron-analysis")
+  val sc: SparkContext = new SparkContext(conf)
+
+  def main(args: Array[String]): Unit = {
+    if (args.length == 0) {
+      println("Usage: sbt run <directory>")
+      println("-- <directory> -- the absolute path of the enron data directory")
+      System.exit(0)
+    }
+
+    val dir = new File(args(0)).listFiles().toIterator
+    while (true) {
+      // looking for Zip files to read in the directory
+      while (dir.hasNext) {
+        val zipRe = new Regex("(.*)?.zip")
+        val currentFile = dir.next.getAbsolutePath
+        if (zipRe.findFirstIn(currentFile) != None) {
+          val zipFile = new ZipFile(currentFile)
+          println(currentFile)
+          val em = EnronExtractor.extractEmailMessagesFromZip(zipFile)
+          em.head.to.foreach(println(_))
+          //val zipEntries = zipFile.entries
+          //while (zipEntries.hasMoreElements) {
+          //println(zipEntries.nextElement.getName)
+          //}
+          //val i = zipFile.getInputStream(zipFile.getEntry("test/a.txt"))
+
+          //val a = new BufferedReader(new InputStreamReader(i));
+          //val b = a.lines()
+          //b.toArray().foreach(println(_))
+
+        }
+
+      }
+    }
+    //sc.stop()
+  }
+}
+
+/*
   def main(args: Array[String]): Unit = {
     val conf: SparkConf = new SparkConf().setMaster("local").setAppName("enron-analysis")
     val sc: SparkContext = new SparkContext(conf)
@@ -40,3 +79,4 @@ object EnronAnalyzer {
 class EnronAnalyzer {
     
 }
+*/
