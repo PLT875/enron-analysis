@@ -3,18 +3,19 @@ package enron
 import java.util.zip.{ ZipFile, ZipEntry }
 import scala.util.matching.Regex
 import util.control.Breaks._
-import java.io.File._
+import java.io.{ File, BufferedReader, InputStreamReader }
 import org.w3c.dom._
 import javax.xml.parsers.DocumentBuilderFactory
+import java.util.Arrays
 
 /**
  * EmailMessage represents data extract from an Enron Zip file.
  *
  * @param to the primary recipients (comma delimited and unnormalized)
  * @param cc the carbon copy recipients (comma delimited and unnormalized)
- * @param lines the lines of the email message
+ * @param msgWordCount the word count of the email message
  */
-case class EmailMessage(to: Array[String], cc: Array[String])
+case class EmailMessage(to: Option[String], cc: Option[String], msgWordCount: Int)
 
 object EnronExtractor {
 
@@ -26,7 +27,7 @@ object EnronExtractor {
    *
    * @return an array of email messages
    */
-  def extractEmailMessagesFromZip(zip: ZipFile): Option[EmailMessage] = {
+  def extractEmailMessagesFromZip(zip: ZipFile): Option[Array[EmailMessage]] = {
     val entries = zip.entries
     var xmlFile: Option[String] = None
     breakable {
@@ -41,80 +42,125 @@ object EnronExtractor {
       }
     }
 
-    if (xmlFile.head == None) {
-      None
+    if (xmlFile == None) {
+      return None
     }
 
     val inputStream = zip.getInputStream(zip.getEntry(xmlFile.head));
     val dbFactory = DocumentBuilderFactory.newInstance()
     val dBuilder = dbFactory.newDocumentBuilder()
     val document = dBuilder.parse(inputStream)
-    val nodeList = document.getElementsByTagName("Tag")
 
-    val to = getTagValues(nodeList, "#To")
-    val cc = getTagValues(nodeList, "#CC")
+    val docList = document.getElementsByTagName("Document")
 
-    Some(EmailMessage(to, cc))
+    Some(extractEmailMessagesFromXml(docList, zip))
+  }
+
+  /**
+   * Extracts the required email data from the XML file.
+   *
+   * @param documentList the document elements as a NodeList
+   *
+   * @return an array of email messages
+   */
+  def extractEmailMessagesFromXml(documentList: NodeList, zip: ZipFile): Array[EmailMessage] = {
+    var emailMessages = Array[EmailMessage]()
+    for (index <- 0 until documentList.getLength) {
+      val currentDoc = documentList.item(index).asInstanceOf[Element]
+      val docType = currentDoc.getAttributeNode("DocType").getValue
+      if (docType == "Message") {
+        val tagList = currentDoc.getElementsByTagName("Tag")
+        val to = getTagValue(tagList, "#To")
+        val cc = getTagValue(tagList, "#CC")
+
+        val fileList = currentDoc.getElementsByTagName("File")
+        val msgWordCount = getMessageWordCount(fileList, zip)
+
+        emailMessages = emailMessages :+ EmailMessage(to, cc, msgWordCount)
+      }
+    }
+
+    emailMessages
   }
 
   /**
    * Gets the TagValue of a Tag given a specified TagName.
    *
-   * @param nodes - list of tag elements as a NodeList
-   * @param tagName - the attribute value of the TagName
+   * @param tagList the tag elements as a NodeList
    *
-   * @return an array of tag values
+   * @return the tag value
    */
-  def getTagValues(nodes: NodeList, tagName: String): Array[String] = {
-    var tagValues = Array[String]()
-    for (index <- 0 until nodes.getLength) {
-      val element = nodes.item(index).asInstanceOf[Element]
+  def getTagValue(tagList: NodeList, tagName: String): Option[String] = {
+    for (index <- 0 until tagList.getLength) {
+      val element = tagList.item(index).asInstanceOf[Element]
       val attribute = element.getAttributeNode("TagName").getValue
       if (attribute.equals(tagName)) {
-        tagValues = tagValues :+ element
-          .getAttributeNode("TagValue")
+        val tagValue = element.getAttributeNode("TagValue")
           .getValue
           .toLowerCase
           .trim
           .replaceAll("\\s{2,}", " ")
+
+        return Some(tagValue)
       }
     }
 
-    tagValues
+    None
   }
 
   /**
-   * N.B. Doesn't work properly.
+   * Gets the message lines from the corresponding text file.
    *
-   * Normalizes the given recipient to a valid email address
+   * @param fileList the file elements as a NodeList
    *
-   * @param recipient - an unnormalized recipient, e.g. valderrama larry <larry.valderrama@enron.com>
-   *
-   * @return a valid email address, e.g. larry.valderrama@enron.com
+   * @return an array of lines
    */
-  def normalizeEmailAddress(recipient: String): String = {
-    val matchFirstLastName = """(.+)?\s+?(.+)""".r
-    val matchLdap = """.*recipients\/cn=(\w+)[>|\/].*""".r
-
-    val str = """.*\b[A-Za-z0-9]+(.[A-Za-z0-9]+)*@[A-Za-z0-9]+(.[A-Za-z0-9]+)*(.[A-Za-z]{2,})\b.*"""
-    val findEmailRe = new Regex(str)
-
-    val ldapMatch = matchLdap.findFirstMatchIn(recipient)
-    if (ldapMatch != None) {
-      return ldapMatch.get.group(1) ++ "@enron.com"
+  def getMessageWordCount(fileList: NodeList, zip: ZipFile): Int = {
+    var textFilePath: String = null
+    breakable {
+      for (index <- 0 until fileList.getLength) {
+        val element = fileList.item(index).asInstanceOf[Element]
+        val attribute = element.getAttributeNode("FileType").getValue
+        if (attribute.equals("Text")) {
+          val externalFile = element.getElementsByTagName("ExternalFile")
+          val filePath = externalFile.item(0).asInstanceOf[Element].getAttributeNode("FilePath").getValue
+          val fileName = externalFile.item(0).asInstanceOf[Element].getAttributeNode("FileName").getValue
+          textFilePath = filePath.concat("/").concat(fileName)
+          break
+        }
+      }
     }
 
-    val findEmailAddr = findEmailRe.findFirstIn(recipient)
-    if (findEmailAddr != None) {
-      return findEmailAddr.get
+    if (textFilePath == null) {
+      return 0
     }
 
-    val nameMatch = matchFirstLastName.findFirstMatchIn(recipient)
-    if (nameMatch != None) {
-      return nameMatch.get.group(1) ++ "." ++ nameMatch.get.group(2) ++ "@enron.com"
-    }
+    val inputStream = zip.getInputStream(zip.getEntry(textFilePath))
+    val br = new BufferedReader(new InputStreamReader(inputStream));
+    val lines = br.lines.toArray()
+    val msgHeaders = new Regex("((Date|Message-ID|MIME-Version|" +
+      "Content-Type|From|To|Subject|Content-Transfer-Encoding|" +
+      "X-Filename|X-Folder|X-SDOC|X-ZLID):.+|^\\s*$)")
+    
+    val msgWordCount = lines.filterNot(l => msgHeaders.findAllIn(l.toString).length == 0)
+      .map(l => removePunctuation(l.toString.trim))
+      .map(_.split("\\s"))
+      .map(_.length)
+      .sum
 
-    recipient
+    return msgWordCount
+
   }
-}
 
+  /**
+   * Clean out punctuation from the input.
+   *
+   * @param target the string to clean
+   * @return the output of the replacement
+   */
+  def removePunctuation(target: String): String = {
+    val regex = new Regex("\\p{Punct}")
+    regex.replaceAllIn(target, "")
+  }
+
+}
