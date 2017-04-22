@@ -45,15 +45,21 @@ object EnronExtractor {
     if (xmlFile == None) {
       return None
     }
+       
+    try {
+      val inputStream = zip.getInputStream(zip.getEntry(xmlFile.get))
+      val dbFactory = DocumentBuilderFactory.newInstance()
+      val dBuilder = dbFactory.newDocumentBuilder()
+      val document = dBuilder.parse(inputStream)
 
-    val inputStream = zip.getInputStream(zip.getEntry(xmlFile.head));
-    val dbFactory = DocumentBuilderFactory.newInstance()
-    val dBuilder = dbFactory.newDocumentBuilder()
-    val document = dBuilder.parse(inputStream)
+      val docList = document.getElementsByTagName("Document")
 
-    val docList = document.getElementsByTagName("Document")
-
-    Some(extractEmailMessagesFromXml(docList, zip))
+      return Some(extractEmailMessagesFromXml(docList, zip))
+    } catch {
+      case e: Exception => println("Exception encountered: " + e.getMessage); return None
+    }
+    
+    None
   }
 
   /**
@@ -141,7 +147,7 @@ object EnronExtractor {
     val msgHeaders = new Regex("((Date|Message-ID|MIME-Version|" +
       "Content-Type|From|To|Subject|Content-Transfer-Encoding|" +
       "X-Filename|X-Folder|X-SDOC|X-ZLID):.+|^\\s*$)")
-    
+
     val msgWordCount = lines.filterNot(l => msgHeaders.findAllIn(l.toString).length == 0)
       .map(l => removePunctuation(l.toString.trim))
       .map(_.split("\\s"))

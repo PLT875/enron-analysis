@@ -37,8 +37,8 @@ object EnronAnalyzer {
     while (dir.hasNext) {
       val zipRe = new Regex("(.*)?_xml.zip")
       val currentFile = dir.next.getAbsolutePath
-      println("Current Zip being read is: " + currentFile)
       if (zipRe.findFirstIn(currentFile) != None) {
+        println("Current Zip being read is: " + currentFile)
         val zipFile = new ZipFile(currentFile)
         val em = EnronExtractor.extractEmailMessagesFromZip(zipFile)
         if (em != None) {
