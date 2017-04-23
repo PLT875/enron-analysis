@@ -11,7 +11,7 @@ object EnronAnalyzer {
 
   // defining Spark to run in local mode
   val conf: SparkConf = new SparkConf().setMaster("local").setAppName("enron-analysis")
-  val sc: SparkContext = new SparkContext(conf)
+  implicit val sc: SparkContext = new SparkContext(conf)
 
   def main(args: Array[String]): Unit = {
 
@@ -33,6 +33,9 @@ object EnronAnalyzer {
     var recipientScore = Array[(String, Double)]()
     var msgWordCounts = Array[Int]()
 
+    var rc = sc.parallelize(Array[(String, Double)]())
+    var wc = sc.parallelize(Array[Int]())
+
     // looking for Zip files to read in the directory
     while (dir.hasNext) {
       val zipRe = new Regex("(.*)?_xml.zip")
@@ -42,31 +45,53 @@ object EnronAnalyzer {
         val zipFile = new ZipFile(currentFile)
         val em = EnronExtractor.extractEmailMessagesFromZip(zipFile)
         if (em != None) {
-          em.get.foreach {
-            (msg) =>
-              if (msg.to != None) recipientScore = recipientScore ++ extractRecipients(msg.to.get, 1.0)
-              if (msg.cc != None) recipientScore = recipientScore ++ extractRecipients(msg.cc.get, 0.5)
-              msgWordCounts = msgWordCounts :+ msg.msgWordCount
-          }
+          rc = rc ++ recipientCount(em.get)
+          wc = wc ++ messageCount(em.get)
         }
       }
     }
 
-    val recipientsRDD = sc.parallelize(recipientScore)
+    val top100Recipients = EnronAnalyzer.topRecipients(rc, 100)
+    println("--- Top 100 recipients ---")
+    top100Recipients.foreach(println(_))
 
-    val topRecipients = EnronAnalyzer.topRecipients(recipientsRDD, 100)
-    topRecipients.foreach(println(_))
-
-    val wordCountsRDD = sc.parallelize(msgWordCounts)
-
-    val avg = avgWordCounts(wordCountsRDD)
-    println(avg)
+    val avgWordCount = EnronAnalyzer.avgWordCounts(wc)
+    
+    println("--- Average word count of the emails ---")
+    println(avgWordCount)
 
     sc.stop
-    // while(!sc.isStopped) {
-    // keeping the application alive so that Spark UI is still available
-    // }
+  }
 
+  def recipientCount(ems: Array[EmailMessage])(implicit sc: SparkContext): RDD[(String, Double)] = {
+    val emailRe = new Regex("""([\w-\.]+)@((?:[\w]+\.)+)([a-z]{2,4})+""")
+    val toRDD = sc.parallelize(ems.flatMap(_.to))
+    val ccRDD = sc.parallelize(ems.flatMap(_.cc))
+    def parseAndCount(rec: RDD[String], const: Double): RDD[(String, Double)] = {
+      rec.flatMap(_.split(",\\s*"))
+        .map(emailRe.findFirstMatchIn(_))
+        .filter(_ != None)
+        .map(r => (r.get.toString, const))
+        .reduceByKey(_ + _)
+    }
+
+    return (parseAndCount(toRDD, 1.0) ++ parseAndCount(ccRDD, 0.5))
+  }
+
+  def messageCount(ems: Array[EmailMessage])(implicit sc: SparkContext): RDD[Int] = {
+    val lines = ems.flatMap(_.lines)
+    val linesRDD = sc.parallelize(lines)
+
+    def parseAndCount(l: RDD[Array[Object]]): RDD[Int] = {
+      val wordCount = l.flatMap(lines => lines)
+        .map(line => line.toString)
+        .map(_.split("\\s+"))
+        .map(_.length)
+
+      return wordCount
+    }
+    
+    return parseAndCount(linesRDD)
   }
 
   /**
@@ -82,11 +107,16 @@ object EnronAnalyzer {
   }
 
   def topRecipients(r: RDD[(String, Double)], limit: Int): Array[(String, Double)] = {
-    r.reduceByKey(_ + _).takeOrdered(100)(Ordering[Double].reverse.on(x => x._2))
+    r.takeOrdered(100)(Ordering[Double].reverse.on(x => x._2))
   }
 
   def avgWordCounts(wc: RDD[Int]): Double = {
     wc.mean().toInt
+  }
+
+  def removePunctuation(target: String): String = {
+    val regex = new Regex("\\p{Punct}")
+    regex.replaceAllIn(target, "")
   }
 }
 

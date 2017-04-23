@@ -7,6 +7,7 @@ import java.io.{ File, BufferedReader, InputStreamReader }
 import org.w3c.dom._
 import javax.xml.parsers.DocumentBuilderFactory
 import java.util.Arrays
+import scala.util.matching.Regex._
 
 /**
  * EmailMessage represents data extract from an Enron Zip file.
@@ -15,7 +16,7 @@ import java.util.Arrays
  * @param cc the carbon copy recipients (comma delimited and unnormalized)
  * @param msgWordCount the word count of the email message
  */
-case class EmailMessage(to: Option[String], cc: Option[String], msgWordCount: Int)
+case class EmailMessage(to: Option[String], cc: Option[String], lines: Option[Array[Object]])
 
 object EnronExtractor {
 
@@ -45,7 +46,7 @@ object EnronExtractor {
     if (xmlFile == None) {
       return None
     }
-       
+
     try {
       val inputStream = zip.getInputStream(zip.getEntry(xmlFile.get))
       val dbFactory = DocumentBuilderFactory.newInstance()
@@ -58,7 +59,7 @@ object EnronExtractor {
     } catch {
       case e: Exception => println("Exception encountered: " + e.getMessage); return None
     }
-    
+
     None
   }
 
@@ -78,11 +79,10 @@ object EnronExtractor {
         val tagList = currentDoc.getElementsByTagName("Tag")
         val to = getTagValue(tagList, "#To")
         val cc = getTagValue(tagList, "#CC")
-
         val fileList = currentDoc.getElementsByTagName("File")
-        val msgWordCount = getMessageWordCount(fileList, zip)
+        val lines = getMessageLines(fileList, zip)
 
-        emailMessages = emailMessages :+ EmailMessage(to, cc, msgWordCount)
+        emailMessages = emailMessages :+ EmailMessage(to, cc, lines) //, msgWordCount)
       }
     }
 
@@ -121,7 +121,7 @@ object EnronExtractor {
    *
    * @return an array of lines
    */
-  def getMessageWordCount(fileList: NodeList, zip: ZipFile): Int = {
+  def getMessageLines(fileList: NodeList, zip: ZipFile): Option[Array[Object]] = {
     var textFilePath: String = null
     breakable {
       for (index <- 0 until fileList.getLength) {
@@ -138,25 +138,16 @@ object EnronExtractor {
     }
 
     if (textFilePath == null) {
-      return 0
+      return None
     }
 
     val inputStream = zip.getInputStream(zip.getEntry(textFilePath))
     val br = new BufferedReader(new InputStreamReader(inputStream));
     val lines = br.lines.toArray()
-    val msgHeaders = new Regex("((Date|Message-ID|MIME-Version|" +
-      "Content-Type|From|To|Subject|Content-Transfer-Encoding|" +
-      "X-Filename|X-Folder|X-SDOC|X-ZLID):.+|^\\s*$)")
-
-    val msgWordCount = lines.filterNot(l => msgHeaders.findAllIn(l.toString).length == 0)
-      .map(l => removePunctuation(l.toString.trim))
-      .map(_.split("\\s"))
-      .map(_.length)
-      .sum
-
-    return msgWordCount
-
+   
+    return Some(lines)
   }
+ 
 
   /**
    * Clean out punctuation from the input.
@@ -164,9 +155,9 @@ object EnronExtractor {
    * @param target the string to clean
    * @return the output of the replacement
    */
-  def removePunctuation(target: String): String = {
-    val regex = new Regex("\\p{Punct}")
-    regex.replaceAllIn(target, "")
-  }
+  //def removePunctuation(target: String): String = {
+    //val regex = new Regex("\\p{Punct}")
+    //regex.replaceAllIn(target, "")
+  //}
 
 }
