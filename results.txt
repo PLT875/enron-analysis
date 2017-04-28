@@ -1,3 +1,4 @@
+17/04/28 13:28:32 INFO DAGScheduler: Job 149 finished: takeOrdered at EnronAnalyzer.scala:133, took 25.245991 s
 --- Top 100 recipients ---
 (pete.davis@enron.com,13768.5)
 (40enron@enron.com,9258.0)
@@ -99,37 +100,37 @@
 (rod.hayslett@enron.com,1090.0)
 (peter.f.keavey@enron.com,1066.5)
 (paul.j.broderick@enron.com,1054.0)
-17/04/27 20:30:33 INFO SparkContext: Starting job: mean at EnronAnalyzer.scala:62
-17/04/27 20:30:33 INFO DAGScheduler: Got job 150 (mean at EnronAnalyzer.scala:62) with 1 output partitions
-17/04/27 20:30:33 INFO DAGScheduler: Final stage: ResultStage 300 (mean at EnronAnalyzer.scala:62)
-17/04/27 20:30:33 INFO DAGScheduler: Parents of final stage: List()
-17/04/27 20:30:33 INFO DAGScheduler: Missing parents: List()
-17/04/27 20:30:33 INFO DAGScheduler: Submitting ResultStage 300 (MapPartitionsRDD[2984] at mean at EnronAnalyzer.scala:62), which has no missing parents
-17/04/27 20:30:33 INFO MemoryStore: Block broadcast_300 stored as values in memory (estimated size 2.0 KB, free 408.5 MB)
-17/04/27 20:30:33 INFO MemoryStore: Block broadcast_300_piece0 stored as bytes in memory (estimated size 1302.0 B, free 408.5 MB)
-17/04/27 20:30:33 INFO BlockManagerInfo: Added broadcast_300_piece0 in memory on 172.31.67.192:40633 (size: 1302.0 B, free: 408.8 MB)
-17/04/27 20:30:33 INFO SparkContext: Created broadcast 300 from broadcast at DAGScheduler.scala:1012
-17/04/27 20:30:33 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 300 (MapPartitionsRDD[2984] at mean at EnronAnalyzer.scala:62)
-17/04/27 20:30:33 INFO TaskSchedulerImpl: Adding task set 300.0 with 1 tasks
-17/04/27 20:30:33 INFO TaskSetManager: Starting task 0.0 in stage 300.0 (TID 1045, localhost, partition 0, PROCESS_LOCAL, 6479 bytes)
-17/04/27 20:30:33 INFO Executor: Running task 0.0 in stage 300.0 (TID 1045)
-17/04/27 20:30:33 INFO Executor: Finished task 0.0 in stage 300.0 (TID 1045). 921 bytes result sent to driver
-17/04/27 20:30:33 INFO TaskSetManager: Finished task 0.0 in stage 300.0 (TID 1045) in 5 ms on localhost (1/1)
-17/04/27 20:30:33 INFO TaskSchedulerImpl: Removed TaskSet 300.0, whose tasks have all completed, from pool 
-17/04/27 20:30:33 INFO DAGScheduler: ResultStage 300 (mean at EnronAnalyzer.scala:62) finished in 0.004 s
-17/04/27 20:30:33 INFO DAGScheduler: Job 150 finished: mean at EnronAnalyzer.scala:62, took 0.008106 s
+17/04/28 13:28:32 INFO SparkContext: Starting job: mean at EnronAnalyzer.scala:62
+17/04/28 13:28:32 INFO DAGScheduler: Got job 150 (mean at EnronAnalyzer.scala:62) with 1 output partitions
+17/04/28 13:28:32 INFO DAGScheduler: Final stage: ResultStage 300 (mean at EnronAnalyzer.scala:62)
+17/04/28 13:28:32 INFO DAGScheduler: Parents of final stage: List()
+17/04/28 13:28:32 INFO DAGScheduler: Missing parents: List()
+17/04/28 13:28:32 INFO DAGScheduler: Submitting ResultStage 300 (MapPartitionsRDD[2984] at mean at EnronAnalyzer.scala:62), which has no missing parents
+17/04/28 13:28:32 INFO MemoryStore: Block broadcast_300 stored as values in memory (estimated size 2.0 KB, free 408.6 MB)
+17/04/28 13:28:32 INFO MemoryStore: Block broadcast_300_piece0 stored as bytes in memory (estimated size 1302.0 B, free 408.6 MB)
+17/04/28 13:28:32 INFO BlockManagerInfo: Added broadcast_300_piece0 in memory on 172.31.67.192:34975 (size: 1302.0 B, free: 408.8 MB)
+17/04/28 13:28:32 INFO SparkContext: Created broadcast 300 from broadcast at DAGScheduler.scala:1012
+17/04/28 13:28:32 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 300 (MapPartitionsRDD[2984] at mean at EnronAnalyzer.scala:62)
+17/04/28 13:28:32 INFO TaskSchedulerImpl: Adding task set 300.0 with 1 tasks
+17/04/28 13:28:32 INFO TaskSetManager: Starting task 0.0 in stage 300.0 (TID 1045, localhost, partition 0, PROCESS_LOCAL, 6479 bytes)
+17/04/28 13:28:32 INFO Executor: Running task 0.0 in stage 300.0 (TID 1045)
+17/04/28 13:28:32 INFO Executor: Finished task 0.0 in stage 300.0 (TID 1045). 921 bytes result sent to driver
+17/04/28 13:28:32 INFO TaskSetManager: Finished task 0.0 in stage 300.0 (TID 1045) in 3 ms on localhost (1/1)
+17/04/28 13:28:32 INFO TaskSchedulerImpl: Removed TaskSet 300.0, whose tasks have all completed, from pool 
+17/04/28 13:28:32 INFO DAGScheduler: ResultStage 300 (mean at EnronAnalyzer.scala:62) finished in 0.003 s
+17/04/28 13:28:32 INFO DAGScheduler: Job 150 finished: mean at EnronAnalyzer.scala:62, took 0.008869 s
 --- Average word count of the emails ---
 318
-17/04/27 20:30:33 INFO SparkUI: Stopped Spark web UI at http://172.31.67.192:4040
-17/04/27 20:30:33 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
-17/04/27 20:30:33 INFO MemoryStore: MemoryStore cleared
-17/04/27 20:30:33 INFO BlockManager: BlockManager stopped
-17/04/27 20:30:33 INFO BlockManagerMaster: BlockManagerMaster stopped
-17/04/27 20:30:33 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
-17/04/27 20:30:33 INFO SparkContext: Successfully stopped SparkContext
-[success] Total time: 246 s, completed 27-Apr-2017 20:30:33
+17/04/28 13:28:32 INFO SparkUI: Stopped Spark web UI at http://172.31.67.192:4040
+17/04/28 13:28:32 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/04/28 13:28:32 INFO MemoryStore: MemoryStore cleared
+17/04/28 13:28:32 INFO BlockManager: BlockManager stopped
+17/04/28 13:28:32 INFO BlockManagerMaster: BlockManagerMaster stopped
+17/04/28 13:28:32 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/04/28 13:28:32 INFO SparkContext: Successfully stopped SparkContext
+[success] Total time: 255 s, completed 28-Apr-2017 13:28:33
 Exiting
-17/04/27 20:30:33 INFO ShutdownHookManager: Shutdown hook called
-17/04/27 20:30:33 INFO ShutdownHookManager: Deleting directory /tmp/spark-3ca7dd2c-8a23-4d46-901f-e5548681716f
+17/04/28 13:28:33 INFO ShutdownHookManager: Shutdown hook called
+17/04/28 13:28:33 INFO ShutdownHookManager: Deleting directory /tmp/spark-479e1ac0-27e1-4cb0-ac60-ebc9b77ae521
 Shutting down Spark
-17/04/27 20:30:34 INFO SparkContext: SparkContext already stopped.
+17/04/28 13:28:34 INFO SparkContext: SparkContext already stopped
